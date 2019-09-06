@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: app
+  labels:
+    app: emqx
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: emqx
+    spec:
+      containers:
+        - name: app
+          image: emqxample/app:latest
+          imagePullPolicy: Never
+          env:
+            - name: MQTTDB_HOST
+              value: psql-db-svc.default.svc

@@ -1,0 +1,19 @@
+version: "3.5"
+services:
+  db:
+    container_name: emqx-db-container
+    build: ./docker/psql/
+    image: emqxample/dev-postgresql
+    networks:
+      - backend
+    ports:
+      - "5432:5432"
+  app:
+    container_name: emqx-app-container
+    build: ./app/
+    image: emqxample/app
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge

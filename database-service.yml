@@ -1,0 +1,9 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: psql-db-svc
+  namespace: default
+spec:
+  type: ExternalName
+  # loopback interface
+  externalName: minikube.host
