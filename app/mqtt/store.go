@@ -48,7 +48,14 @@ func (s *Store) init() error {
 	cUser := &MqttUser{
 		IsSuperuser: false,
 		Username:    "client",
-		Password:    encryptPass("pass"),
+		Password:    encryptPass("pass1"),
+		Salt:        "salt",
+	}
+
+	cUser2 := &MqttUser{
+		IsSuperuser: false,
+		Username:    "client2",
+		Password:    encryptPass("pass2"),
 		Salt:        "salt",
 	}
 
@@ -73,18 +80,28 @@ func (s *Store) init() error {
 		return err
 	}
 
+	if err := tx.Save(&cUser2).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
 	if err := aclDenyAllTopic(tx, "#"); err != nil {
 		tx.Rollback()
 		return err
 	}
 
 	//todo manage versions
-	if err := aclAllowUserTopic(tx, "admin", DeviceTopic("/v1.0", "1")); err != nil {
+	if err := aclAllowUserTopic(tx, "admin", AllDeviceTopic("/v1.0")); err != nil {
 		tx.Rollback()
 		return err
 	}
 
 	if err := aclAllowUserTopic(tx, "client", DeviceTopic("/v1.0", "1")); err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := aclAllowUserTopic(tx, "client2", DeviceTopic("/v1.0", "2")); err != nil {
 		tx.Rollback()
 		return err
 	}

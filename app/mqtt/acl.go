@@ -29,10 +29,11 @@ func (MqttAcl) TableName() string {
 }
 
 func aclDenyAllTopic(db *gorm.DB, t string) error {
+	uname := "$all"
 	rule := &MqttAcl{
 		Allow:    0,
 		Ipaddr:   nil,
-		Username: nil,
+		Username: &uname,
 		Clientid: nil,
 		Access:   3,
 		Topic:    t}
@@ -43,6 +44,18 @@ func aclDenyAllTopic(db *gorm.DB, t string) error {
 func aclAllowUserTopic(db *gorm.DB, u string, t string) error {
 	rule := &MqttAcl{
 		Allow:    1,
+		Ipaddr:   nil,
+		Username: &u,
+		Clientid: nil,
+		Access:   3,
+		Topic:    t,
+	}
+	return db.Save(rule).Error
+}
+
+func aclDenyUserTopic(db *gorm.DB, u string, t string) error {
+	rule := &MqttAcl{
+		Allow:    0,
 		Ipaddr:   nil,
 		Username: &u,
 		Clientid: nil,

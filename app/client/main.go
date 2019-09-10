@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"time"
 
 	"github.com/jwtea/emqxample/app/mqtt"
 	log "github.com/sirupsen/logrus"
@@ -28,19 +29,30 @@ func NewSpec() *Specification {
 	return &Specification{
 		MQTTURL:      getenv("MQTT_URL", "tcp://192.168.99.100:32334"),
 		MQTTClientID: getenv("MQTT_CLIENT_ID", "clientclient"),
-		MQTTPass:     getenv("MQTT_PASS", "pass"),
+		MQTTPass:     getenv("MQTT_PASS", "pass1"),
 		MQTTUser:     getenv("MQTT_USER", "client"),
 		MQTTAPIVer:   "/v1.0",
 	}
 }
 
 func main() {
+
+	serial := "1"
+
 	log.SetLevel(log.DebugLevel)
 	s := NewSpec()
 	mOpts := mqtt.NewClientOpts().SetAPIVer(s.MQTTAPIVer).SetBrokerURL(s.MQTTURL).SetUsername(s.MQTTUser).SetPassword(s.MQTTPass).SetClientID(s.MQTTClientID)
+
+	lwMessage := mqtt.DeviceMessage{Message: "Last will", Timestamp: 0}
+
+	lwOpts := mqtt.NewLastWillOpts().SetTopic(mqtt.DeviceTopic(s.MQTTAPIVer, serial)).SetMessage(string(lwMessage.JSON()))
+
+	mOpts.SetLastWillOpts(lwOpts)
+
 	mc := mqtt.NewClient(mOpts)
 
-	for i := 0; i < 10000; i++ {
-		mc.PublishDeviceMessage("1", "yoi")
+	for i := 0; i < 2; i++ {
+		mc.PublishDeviceMessage(serial, "yoi")
+		time.Sleep(1000)
 	}
 }

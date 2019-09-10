@@ -7,36 +7,53 @@ const qos = 2
 const retained = false
 const keepAlive = 3 * time.Second
 
+type LastWillOpts struct {
+	topic    string
+	message  string
+	qos      byte
+	retained bool
+}
+
 // ClientOpts
 type ClientOpts struct {
-	brokerURL  string
-	password   string
-	username   string
-	clientID   string
-	apiVer     string
-	handlerQos byte
-	retained   bool
-	timeout    time.Duration
-	keepAlive  time.Duration
+	enableLog    bool
+	brokerURL    string
+	password     string
+	username     string
+	clientID     string
+	apiVer       string
+	lastWillOpts *LastWillOpts
+	handlerQos   byte
+	retained     bool
+	timeout      time.Duration
+	keepAlive    time.Duration
 }
 
 // NewClientOpts returns a new ClientOpts struct with default values
 func NewClientOpts() *ClientOpts {
 	return &ClientOpts{
-		brokerURL:  "",
-		password:   "",
-		username:   "",
-		apiVer:     "",
-		handlerQos: qos,
-		retained:   retained,
-		timeout:    timeout,
-		keepAlive:  keepAlive,
+		enableLog:    false,
+		brokerURL:    "",
+		password:     "",
+		username:     "",
+		apiVer:       "",
+		lastWillOpts: nil,
+		handlerQos:   qos,
+		retained:     retained,
+		timeout:      timeout,
+		keepAlive:    keepAlive,
 	}
 }
 
 // SetAPIVer for mqtt comms
 func (o *ClientOpts) SetAPIVer(ver string) *ClientOpts {
 	o.apiVer = ver
+	return o
+}
+
+// EnableLogging configures mqtt client to output mqtt logs
+func (o *ClientOpts) EnableLogging() *ClientOpts {
+	o.enableLog = true
 	return o
 }
 
@@ -68,4 +85,44 @@ func (o *ClientOpts) SetHandlerQos(qos byte) *ClientOpts {
 func (o *ClientOpts) SetUsername(u string) *ClientOpts {
 	o.username = u
 	return o
+}
+
+//SetLastWillOpts for the client connection to broker
+func (o *ClientOpts) SetLastWillOpts(lw *LastWillOpts) *ClientOpts {
+	o.lastWillOpts = lw
+	return o
+}
+
+//NewLastWillOpts returns last will options with defaults
+func NewLastWillOpts() *LastWillOpts {
+	return &LastWillOpts{
+		message:  "",
+		topic:    "",
+		qos:      qos,
+		retained: retained,
+	}
+}
+
+//SetTopic for the last will
+func (lw *LastWillOpts) SetTopic(t string) *LastWillOpts {
+	lw.topic = t
+	return lw
+}
+
+//SetMessage for last will
+func (lw *LastWillOpts) SetMessage(m string) *LastWillOpts {
+	lw.message = m
+	return lw
+}
+
+//SetQos for last will
+func (lw *LastWillOpts) SetQos(q byte) *LastWillOpts {
+	lw.qos = q
+	return lw
+}
+
+//SetRetained for last will
+func (lw *LastWillOpts) SetRetained(r bool) *LastWillOpts {
+	lw.retained = r
+	return lw
 }

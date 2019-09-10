@@ -20,7 +20,7 @@ type DeviceMessage struct {
 }
 
 // NewDeviceMessage returns a new device message
-func (c *Client) NewDeviceMessage() *DeviceMessage {
+func NewDeviceMessage() *DeviceMessage {
 	return &DeviceMessage{"hello", 0}
 }
 
