@@ -1,0 +1,8 @@
+# Certs
+*.csr
+*.key
+*.pem
+*.srl
+
+# Air
+**/tmp

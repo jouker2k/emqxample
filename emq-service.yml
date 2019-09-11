@@ -47,6 +47,31 @@ spec:
     app: emqx
   type: NodePort
 ---
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: emqx-mqtt-ssl
+spec:
+  ports:
+    - port: 32335
+      nodePort: 32335
+      targetPort: emqx-mqtt-ssl
+      protocol: TCP
+  selector:
+    app: emqx
+  type: NodePort
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cert-secrets
+data:
+  key.pem: #Here
+  cert.pem: #Here
+  cacert.pem: #Here
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -64,6 +89,10 @@ spec:
       containers:
         - name: emqx
           image: emqx/emqx:latest
+          volumeMounts:
+            - mountPath: "/opt/emqx/etc/certs"
+              name: cert-volume
+              readOnly: true
           ports:
             - name: emqx-dashboard
               containerPort: 18083
@@ -71,6 +100,8 @@ spec:
               containerPort: 8083
             - name: emqx-mqtt
               containerPort: 1883
+            - name: emqx-mqtt-ssl
+              containerPort: 8883
           env:
             - name: EMQX_ALLOW_ANONYMOUS
               value: "false"
@@ -100,4 +131,10 @@ spec:
               value: mqtt_db
             - name: EMQX_LOG__LEVEL
               value: debug
+            - name: EMQX_LISTENER__SSL__EXTERNAL__CACERTFILE
+              value: "{{ platform_etc_dir }}/certs/cacert.pem"
           tty: true
+      volumes:
+        - name: cert-volume
+          secret:
+            secretName: cert-secrets

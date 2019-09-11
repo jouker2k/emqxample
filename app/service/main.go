@@ -40,7 +40,7 @@ func NewSpec() *Specification {
 		MQTTDBUser:   getenv("MQTTDB_USER", "docker"),
 		MQTTDBName:   getenv("MQTTDB_NAME", "mqtt_db"),
 		MQTTDBPass:   getenv("MQTTDB_PASS", "docker"),
-		MQTTURL:      getenv("MQTT_URL", "tcp://192.168.99.100:32334"),
+		MQTTURL:      getenv("MQTT_URL", "ssl://192.168.99.100:32335"),
 		MQTTClientID: getenv("MQTT_CLIENT_ID", "adminclient"),
 		MQTTPass:     getenv("MQTT_PASS", "pass"),
 		MQTTUser:     getenv("MQTT_USER", "admin"),

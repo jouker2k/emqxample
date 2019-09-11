@@ -25,6 +25,10 @@ func NewClient(o *ClientOpts) *Client {
 		o.brokerURL).SetPassword(o.password).SetUsername(
 		o.username).SetClientID(o.clientID).SetKeepAlive(o.keepAlive)
 
+	if o.enableTLS {
+		opts.SetTLSConfig(NewTLSConfig(o.caPath))
+	}
+
 	opts.OnConnectionLost = DefConHandler
 
 	if o.lastWillOpts != nil {

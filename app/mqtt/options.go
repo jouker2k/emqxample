@@ -17,6 +17,8 @@ type LastWillOpts struct {
 // ClientOpts
 type ClientOpts struct {
 	enableLog    bool
+	enableTLS    bool
+	caPath       string // file containing concatenated CA certificates if there is more than 1 in the chain.
 	brokerURL    string
 	password     string
 	username     string
@@ -33,6 +35,8 @@ type ClientOpts struct {
 func NewClientOpts() *ClientOpts {
 	return &ClientOpts{
 		enableLog:    false,
+		enableTLS:    true,
+		caPath:       "../certs/emqxca.pem",
 		brokerURL:    "",
 		password:     "",
 		username:     "",

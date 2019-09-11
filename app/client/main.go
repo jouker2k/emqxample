@@ -27,17 +27,17 @@ func getenv(key, fallback string) string {
 
 func NewSpec() *Specification {
 	return &Specification{
-		MQTTURL:      getenv("MQTT_URL", "tcp://192.168.99.100:32334"),
+		MQTTURL:      getenv("MQTT_URL", "ssl://192.168.99.100:32335"),
 		MQTTClientID: getenv("MQTT_CLIENT_ID", "clientclient"),
-		MQTTPass:     getenv("MQTT_PASS", "pass1"),
-		MQTTUser:     getenv("MQTT_USER", "client"),
+		MQTTPass:     getenv("MQTT_PASS", "pass2"),
+		MQTTUser:     getenv("MQTT_USER", "client2"),
 		MQTTAPIVer:   "/v1.0",
 	}
 }
 
 func main() {
 
-	serial := "1"
+	serial := "2"
 
 	log.SetLevel(log.DebugLevel)
 	s := NewSpec()
