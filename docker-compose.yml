@@ -12,6 +12,10 @@ services:
     container_name: emqx-app-container
     build: ./app/
     image: emqxample/app
+    environment:
+      - MQTTDB_HOST=db
+    depends_on:
+      - db
     networks:
       - backend
 networks:

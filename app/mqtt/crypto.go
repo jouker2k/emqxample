@@ -1,13 +1,15 @@
 package mqtt
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
+	log "github.com/sirupsen/logrus"
+	"golang.org/x/crypto/bcrypt"
 )
 
-// encryptPass take a plaintext password and return sha256 password
+// encryptPass take a plaintext password and return bcrypt hash
 func encryptPass(p string) string {
-	h := sha256.New()
-	h.Write([]byte(p))
-	return hex.EncodeToString(h.Sum(nil))
+	h, err := bcrypt.GenerateFromPassword([]byte(p), 12)
+	if err != nil {
+		log.Error(err)
+	}
+	return string(h)
 }

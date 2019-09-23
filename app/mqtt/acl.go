@@ -7,7 +7,6 @@ type MqttUser struct {
 	IsSuperuser bool
 	Username    string
 	Password    string
-	Salt        string
 }
 
 func (MqttUser) TableName() string {

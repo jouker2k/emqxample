@@ -129,6 +129,10 @@ spec:
               value: docker
             - name: EMQX_AUTH__PGSQL__DATABASE
               value: mqtt_db
+            - name: EMQX_AUTH__PGSQL__PASSWORD_HASH
+              value: salt,bcrypt
+            - name: EMQX_AUTH__PGSQL__AUTH_QUERY
+              value: select password, substring(password, 0, 30) as salt from mqtt_user where username = '%u' limit 1
             - name: EMQX_LOG__LEVEL
               value: debug
             - name: EMQX_LISTENER__SSL__EXTERNAL__CACERTFILE

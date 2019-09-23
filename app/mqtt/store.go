@@ -42,21 +42,18 @@ func (s *Store) init() error {
 		IsSuperuser: false,
 		Username:    "admin",
 		Password:    encryptPass("pass"),
-		Salt:        "salt",
 	}
 
 	cUser := &MqttUser{
 		IsSuperuser: false,
 		Username:    "client",
 		Password:    encryptPass("pass1"),
-		Salt:        "salt",
 	}
 
 	cUser2 := &MqttUser{
 		IsSuperuser: false,
 		Username:    "client2",
 		Password:    encryptPass("pass2"),
-		Salt:        "salt",
 	}
 
 	tx := s.db.Begin()

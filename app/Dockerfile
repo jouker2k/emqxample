@@ -1,13 +1,13 @@
-FROM golang
+FROM golang:1.12 AS builder
 
-ENV GO111MODULE=on
+COPY . /build/
+WORKDIR /build/service
+RUN go build
 
-WORKDIR /app
+FROM alpine:3.10
+RUN mkdir /lib64 && ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
+WORKDIR /emqxample/
+COPY --from=builder /build/service ./
 
-COPY . .
-
-RUN cd service && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build
-RUN ls
 EXPOSE 8111
-
-CMD ["./app/service/service"]
+ENTRYPOINT sh -c "/emqxample/service"
